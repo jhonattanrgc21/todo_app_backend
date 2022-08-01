@@ -1,13 +1,9 @@
-// ======================================
-//			Main Modules
-// ======================================
+// Modules
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
-// ======================================
-//				Routes
-// ======================================
+// Routes
 import routes from "./controllers/index.controller";
 
 // ======================================

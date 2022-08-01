@@ -1,8 +1,12 @@
+// Modules
 import { Router } from 'express';
+
+// Controllers
 import  taskController from './tasks.controller'
 
-const router = Router();
+const routes = Router();
 
-router.use('/task', taskController)
+// Task Routes
+routes.use('/task', taskController)
 
-export default router
+export default routes

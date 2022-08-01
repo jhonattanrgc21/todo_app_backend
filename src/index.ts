@@ -1,4 +1,4 @@
-//	Main Modules
+// Modules
 import 'reflect-metadata';
 import App from './app/app.module';
 import * as dotenv from 'dotenv';
