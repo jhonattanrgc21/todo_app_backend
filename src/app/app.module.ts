@@ -8,7 +8,7 @@ import morgan from 'morgan';
 // ======================================
 //				Routes
 // ======================================
-//import routes from "../routes/index.routes";
+import routes from "./controllers/index.controller";
 
 // ======================================
 //				Bootstraping
@@ -23,6 +23,6 @@ export default function App(){
 	app.use(cors());
 
 	// Routes
-    //app.use('/', routes);
+    app.use('/api', routes);
 	return app;
 }

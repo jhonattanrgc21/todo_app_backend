@@ -15,7 +15,7 @@ export default class Task extends UuidEntity{
 	@Column({
 		type: 'bool',
 		comment: "¿Finalizada?",
-		default: 0
+		default: false
 	})
 	private check: boolean;
 
