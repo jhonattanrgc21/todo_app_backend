@@ -20,6 +20,8 @@ export default function App(){
 	// middlewares
 	app.use(express.json());
 	app.use(morgan('dev'));
+
+	// Configurar cabeceras y cors
 	app.use(cors());
 
 	const specs = swaggerJsDoc(options);

@@ -15,12 +15,12 @@ export const findAll = async () => {
 	return await Task.find();
 }
 
-export const findAllCheck = async () => {
-	return await Task.findBy({check: true});
+export const findAllChecked = async () => {
+	return await Task.findBy({checked: true});
 }
 
-export const findAllNoCheck = async () => {
-	return await Task.findBy({check: false});
+export const findAllNoChecked = async () => {
+	return await Task.findBy({checked: false});
 }
 
 export const findById = async (id: number) => {
@@ -35,11 +35,15 @@ export const findByName = async (name: string) => {
 export const updateTask = async (id: number, task: UpdateTask) => {
 	let entity: Task = await findById(id);
 	entity.name = task.name ? task.name.toLowerCase() : entity.name;
-	entity.check = task.check != undefined ? task.check : entity.check;
+	entity.checked = task.checked != undefined ? task.checked : entity.checked;
 	await entity.save();
 	return entity;
 }
 
 export const deleteTaskById = async (id: number) => {
 	return Task.delete(id);
+}
+
+export const deleteAllTask = async () => {
+	return Task.clear();
 }

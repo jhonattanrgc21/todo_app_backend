@@ -5,7 +5,18 @@ import { Router, Request, Response } from 'express';
 import { Task, CreateTask, UpdateTask } from '../interfaces/tasks.interface';
 
 // Services
-import { createTask, findAll, findAllCheck, findAllNoCheck, findById, findByName, updateTask, deleteTaskById } from '../services/tasks.service'
+import {
+	createTask,
+	findAll,
+	findAllChecked,
+	findAllNoChecked,
+	findById,
+	findByName,
+	updateTask,
+	deleteTaskById,
+	deleteAllTask
+}
+from '../services/tasks.service'
 
 const routes = Router();
 
@@ -22,7 +33,7 @@ const routes = Router();
  *        name:
  *          type: string
  *          description: the name of the task
- *        check:
+ *        checked:
  *          type: boolean
  *          description: the status of the task
  *        created_at:
@@ -34,7 +45,7 @@ const routes = Router();
  *      example:
  *        id: 1
  *        name: My first Task
- *        check: false
+ *        checked: false
  *        created_at: 2022-08-01T19:23:53.516Z
  *        updated_at: 2022-08-01T19:23:53.516Z
  *    CreateTask:
@@ -53,12 +64,12 @@ const routes = Router();
  *        name:
  *          type: string
  *          description: the name of the task
- *        check:
+ *        checked:
  *          type: boolean
  *          description: the status of the task
  *      example:
  *        name: My new first Task
- *        check: true
+ *        checked: true
  *  parameters:
  *    taskId:
  *      in: path
@@ -102,7 +113,7 @@ routes.get('/all',  async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /api/task/allCheck:
+ * /api/task/allCheckeded:
  *  get:
  *    summary: Returns a list of finished task
  *    tags: [Tasks]
@@ -116,8 +127,8 @@ routes.get('/all',  async (req: Request, res: Response) => {
  *              items:
  *                $ref: '#/components/schemas/Task'
  */
-routes.get('/allCheck',  async (req: Request, res: Response) => {
-	const tasks: Task[] = await findAllCheck();
+routes.get('/allCheckeded',  async (req: Request, res: Response) => {
+	const tasks: Task[] = await findAllChecked();
 	if(tasks.length > 0)
 		res.json(tasks);
 	else
@@ -126,7 +137,7 @@ routes.get('/allCheck',  async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /api/task/allNoCheck:
+ * /api/task/allNoChecked:
  *  get:
  *    summary: Returns a list of pending tasks
  *    tags: [Tasks]
@@ -140,8 +151,8 @@ routes.get('/allCheck',  async (req: Request, res: Response) => {
  *              items:
  *                $ref: '#/components/schemas/Task'
  */
-routes.get('/allNoCheck',  async (req: Request, res: Response) => {
-	const tasks: Task[] = await findAllNoCheck();
+routes.get('/allNoChecked',  async (req: Request, res: Response) => {
+	const tasks: Task[] = await findAllNoChecked();
 	if(tasks.length > 0)
 		res.json(tasks);
 	else
@@ -204,7 +215,7 @@ routes.get('/', async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * api//task:
+ * /api/task:
  *  post:
  *    summary: Create a new task
  *    tags: [Tasks]
@@ -314,6 +325,32 @@ routes.delete('/:id', async (req: Request, res: Response) => {
 		res.json({
 			entity: {},
 			message: 'Error, task not found'
+		})
+	}
+})
+
+/**
+ * @swagger
+ * /api/task:
+ *  delete:
+ *    summary: Delete all tasks
+ *    tags: [Tasks]
+ *    responses:
+ *      200:
+ *        description: Successfully deleted tasks
+ *      404:
+ *        description: Error, tasks could not be deleted
+ */
+routes.delete('/', async (req: Request, res: Response) => {
+	try {
+		await deleteAllTask();
+		res.json({
+			message: 'Successfully deleted tasks'
+		})
+
+	} catch (error) {
+		res.json({
+			message: 'Error, tasks could not be deleted'
 		})
 	}
 })

@@ -19,5 +19,5 @@ export default class Task extends UuidEntity{
 		comment: "¿Finalizada?",
 		default: false
 	})
-	public check: boolean;
+	public checked: boolean;
 }
