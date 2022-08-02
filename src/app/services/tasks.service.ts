@@ -34,7 +34,7 @@ export const findByName = async (name: string) => {
 
 export const updateTask = async (id: number, task: UpdateTask) => {
 	let entity: Task = await findById(id);
-	entity.name = task.name ? task.name : entity.name;
+	entity.name = task.name ? task.name.toLowerCase() : entity.name;
 	entity.check = task.check != undefined ? task.check : entity.check;
 	await entity.save();
 	return entity;

@@ -6,7 +6,12 @@ import  taskController from './tasks.controller'
 
 const routes = Router();
 
-// Task Routes
+/**
+ * @swagger
+ * tags:
+ *  name: Tasks
+ *  description: Tasks endpoint
+ */
 routes.use('/task', taskController)
 
 export default routes

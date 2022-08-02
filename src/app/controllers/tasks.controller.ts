@@ -9,7 +9,89 @@ import { createTask, findAll, findAllCheck, findAllNoCheck, findById, findByName
 
 const routes = Router();
 
-// Obtener Todas las tareas
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Task:
+ *      type: object
+ *      properties:
+ *        id:
+ *          type: number
+ *          description: the auto-generated id of task
+ *        name:
+ *          type: string
+ *          description: the name of the task
+ *        check:
+ *          type: boolean
+ *          description: the status of the task
+ *        created_at:
+ *          type: string
+ *          description: creation date
+ *        updated_at:
+ *          type: string
+ *          description: update date
+ *      example:
+ *        id: 1
+ *        name: My first Task
+ *        check: false
+ *        created_at: 2022-08-01T19:23:53.516Z
+ *        updated_at: 2022-08-01T19:23:53.516Z
+ *    CreateTask:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          description: the name of the task
+ *      required:
+ *        - name
+ *      example:
+ *        name: My first Task
+ *    UpdateTask:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          description: the name of the task
+ *        check:
+ *          type: boolean
+ *          description: the status of the task
+ *      example:
+ *        name: My new first Task
+ *        check: true
+ *  parameters:
+ *    taskId:
+ *      in: path
+ *      name: id
+ *      required: true
+ *      schema:
+ *        type: number
+ *      description: the task id
+ *    taskName:
+ *      in: query
+ *      name: name
+ *      required: true
+ *      schema:
+ *        type: string
+ *      description: the task name
+ */
+
+/**
+ * @swagger
+ * /api/task/all:
+ *  get:
+ *    summary: Returns a list of tasks
+ *    tags: [Tasks]
+ *    responses:
+ *      200:
+ *        description: the list of tasks
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Task'
+ */
 routes.get('/all',  async (req: Request, res: Response) => {
 	const tasks: Task[] = await findAll();
 	if(tasks.length > 0)
@@ -18,7 +100,22 @@ routes.get('/all',  async (req: Request, res: Response) => {
 		res.json([]);
 })
 
-// Oobtener tareas finalizadas
+/**
+ * @swagger
+ * /api/task/allCheck:
+ *  get:
+ *    summary: Returns a list of finished task
+ *    tags: [Tasks]
+ *    responses:
+ *      200:
+ *        description: the list of finished task
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Task'
+ */
 routes.get('/allCheck',  async (req: Request, res: Response) => {
 	const tasks: Task[] = await findAllCheck();
 	if(tasks.length > 0)
@@ -27,7 +124,22 @@ routes.get('/allCheck',  async (req: Request, res: Response) => {
 		res.json([]);
 })
 
-// Oobtener tareas pendientes
+/**
+ * @swagger
+ * /api/task/allNoCheck:
+ *  get:
+ *    summary: Returns a list of pending tasks
+ *    tags: [Tasks]
+ *    responses:
+ *      200:
+ *        description: the list of pending tasks
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Task'
+ */
 routes.get('/allNoCheck',  async (req: Request, res: Response) => {
 	const tasks: Task[] = await findAllNoCheck();
 	if(tasks.length > 0)
@@ -36,7 +148,24 @@ routes.get('/allNoCheck',  async (req: Request, res: Response) => {
 		res.json([]);
 })
 
-// Obtener una tarea por ID
+/**
+ * @swagger
+ * /api/task/{id}:
+ *  get:
+ *    summary: Returns a task by id
+ *    tags: [Tasks]
+ *    parameters:
+ *      - $ref: '#/components/parameters/taskId'
+ *    responses:
+ *      200:
+ *        description: The task
+ *        content:
+ *          application/json:
+ *            schema:
+ *            $ref: '#/components/schemas/Task'
+ *      404:
+ *        description: the task was not found
+ */
 routes.get('/:id', async (req: Request, res: Response) => {
 	const id = Number(req.params.id);
 	const task: Task = await findById(id);
@@ -46,7 +175,24 @@ routes.get('/:id', async (req: Request, res: Response) => {
 		res.json({});
 })
 
-// Obtener una tarea por nombre
+/**
+ * @swagger
+ * /api/task:
+ *  get:
+ *    summary: Returns a task by name
+ *    tags: [Tasks]
+ *    parameters:
+ *      - $ref: '#/components/parameters/taskName'
+ *    responses:
+ *      200:
+ *        description: The task
+ *        content:
+ *          application/json:
+ *            schema:
+ *            $ref: '#/components/schemas/Task'
+ *      404:
+ *        description: the task was not found
+ */
 routes.get('/', async (req: Request, res: Response) => {
 	const name = String(req.query.name).toLowerCase();
 	const task: Task = await findByName(name);
@@ -56,7 +202,29 @@ routes.get('/', async (req: Request, res: Response) => {
 		res.json({});
 })
 
-// Crear una tarea
+/**
+ * @swagger
+ * api//task:
+ *  post:
+ *    summary: Create a new task
+ *    tags: [Tasks]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/CreateTask'
+ *    responses:
+ *      200:
+ *        description: the tasks was successfully created
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Task'
+ *      500:
+ *        description: Some server error
+ *
+ */
 routes.post('/',  async(req: Request, res: Response) => {
 	const newTask: CreateTask = req.body;
 	try {
@@ -73,7 +241,30 @@ routes.post('/',  async(req: Request, res: Response) => {
 	}
 })
 
-// Actualizar una tarea
+/**
+ * @swagger
+ * /api/task/{id}:
+ *  put:
+ *    summary: Update a task by id
+ *    tags: [Tasks]
+ *    parameters:
+ *      - $ref: '#/components/parameters/taskId'
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/UpdateTask'
+ *    responses:
+ *      200:
+ *        description: The updated task
+ *        content:
+ *          application/json:
+ *            schema:
+ *            $ref: '#/components/schemas/Task'
+ *      404:
+ *        description: the task was not found
+ */
 routes.put('/:id', async (req: Request, res: Response) => {
 	const id = Number(req.params.id);
 	const task: UpdateTask = req.body;
@@ -91,7 +282,24 @@ routes.put('/:id', async (req: Request, res: Response) => {
 	}
 })
 
-// Eliminar una tarea
+/**
+ * @swagger
+ * /api/task/{id}:
+ *  delete:
+ *    summary: Delete a task by id
+ *    tags: [Tasks]
+ *    parameters:
+ *      - $ref: '#/components/parameters/taskId'
+ *    responses:
+ *      200:
+ *        description: the task was deleted
+ *        content:
+ *          application/json:
+ *            schema:
+ *            $ref: '#/components/schemas/Task'
+ *      404:
+ *        description: the task was not found
+ */
 routes.delete('/:id', async (req: Request, res: Response) => {
 	const id = Number(req.params.id);
 	const task: Task = await findById(id);
